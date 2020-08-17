@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2155
 
 # ARK: survival evolved manager
 #
@@ -2912,8 +2913,8 @@ doRemoveMods(){
 # Copies server state to a backup directory
 #
 doBackup(){
-  local datestamp=`date +"%Y-%m-%d_%H.%M.%S"`
-  local daystamp=`date +"%Y-%m-%d"`
+  local datestamp=$(date +"%Y-%m-%d_%H.%M.%S")
+  local daystamp=$(date +"%Y-%m-%d")
   local backupdir="${arkbackupdir}/${datestamp}"
   local backupdirdaily="${arkbackupdir}/${daystamp}"
   local saverootdir="${arkserverroot}/${arkserverdir}/Saved"
