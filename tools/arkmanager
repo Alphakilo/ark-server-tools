@@ -2941,7 +2941,7 @@ doBackup(){
     return 1
   fi
 
-  if [[ -d "$tmpdir$" && -w "$tmpdir" ]]; then
+  if [[ -d "$tmpdir" && -w "$tmpdir" ]]; then
     logprint "Tempfolder created: $tmpdir"
 
     # check if the tmp folder has enough free space    
