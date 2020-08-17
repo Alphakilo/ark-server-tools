@@ -3130,8 +3130,9 @@ doBackup(){
 
   echo -ne "${NORMAL} Compressing Backup "
   backupfile="${arkbackupdir}/${daystamp}/${instance}.${datestamp}.tar.bz2"
+  [ -d "${arkbackupdir}/${daystamp}" ] || mkdir -p "${arkbackupdir}/${daystamp}"
 
-  tar -jcf "${backupfile}" -C "${arkbackupdir}" "${datestamp}"
+  tar -jcf "${backupfile}" -C "${backupdir}" "${datestamp}"
   rm -rf "${backupdir:?}/"
 
   if [ -f "${backupfile}" ]; then
