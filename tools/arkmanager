@@ -2915,6 +2915,7 @@ doRemoveMods(){
 doBackup(){
   local datestamp=$(date +"%Y-%m-%d_%H.%M.%S")
   local daystamp=$(date +"%Y-%m-%d")
+  local tmpdir=$(mktemp -qd arkbackup.XXXXXX)
   local backupdir="${arkbackupdir}/${datestamp}"
   local backupdirdaily="${arkbackupdir}/${daystamp}"
   local saverootdir="${arkserverroot}/${arkserverdir}/Saved"
@@ -2942,6 +2943,22 @@ doBackup(){
     return 1
   fi
 
+  if [[ -d "$tmpdir$" ]]; then
+    logprint "Tempfolder created: $tmpdir"
+
+    # check if the tmp folder has enough free space    
+    local tmpfree=$(($(stat -f --format="%b*%S" "$tmpdir")))
+    local savedirsize=$(du -sL "$savedir" | cut -f 1)
+    if [[ "$tmpfree" -ge "$savedirsize" ]]; then      
+      logprint "Enough space on /tmp to work there"
+    else
+      echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
+      logprint "/tmp partition too small to provide a workdir, continuing in $backupdir"
+      rm -rf "{$tmpdir:?}/"
+    fi
+  fi
+
+  # TODO: fix "\033[0;39m" output
   echo "${NORMAL} Saved arks directory is ${savedir}"
 
   # ARK server uses Write-Unlink-Rename
