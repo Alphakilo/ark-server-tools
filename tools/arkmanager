@@ -3131,7 +3131,7 @@ doBackup(){
   backupfile="${arkbackupdir}/${daystamp}/${instance}.${datestamp}.tar.bz2"
 
   tar -jcf "${backupfile}" -C "${arkbackupdir}" "${datestamp}"
-  rm -rf ${backupdir}
+  rm -rf "${backupdir:?}/"
 
   if [ -f "${backupfile}" ]; then
    echo -e "${NORMAL}\e[68G[   ${GREEN}OK${NORMAL}   ]"
