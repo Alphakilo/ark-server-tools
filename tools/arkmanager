@@ -2959,8 +2959,8 @@ doBackup(){
     logprint "$tmpdir is not writable, continuing in $backupdir"
   fi
 
-  [[ ! -d "$backupdir" ]] || mkdir -p "$backupdir"
-  [[ ! -d "$backupdirdaily" ]] || mkdir -p "$backupdirdaily"
+  mkdir -p "$backupdir"
+  mkdir -p "$backupdirdaily"
 
   # TODO: fix "\033[0;39m" output
   echo "${NORMAL} Saved arks directory is ${savedir}"
