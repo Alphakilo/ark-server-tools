@@ -2941,8 +2941,8 @@ doBackup(){
     return 1
   fi
 
-  if [[ -d "$tmpdir" && -w "$tmpdir" ]]; then
-    logprint "Tempfolder created: $tmpdir/"
+  if [[ -d "$tmpdir$" && -w "$tmpdir" ]]; then
+    logprint "Tempfolder created: $tmpdir"
 
     # check if the tmp folder has enough free space    
     local tmpfree=$(($(stat -f --format="%b*%S" "$tmpdir")))
@@ -2952,10 +2952,12 @@ doBackup(){
       backupdirdaily="${tmpdir}/${daystamp}"
       logprint "Enough space on /tmp to work there, continuing in $backupdir"
     else
+      echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
       logprint "/tmp partition too small to provide a workdir, continuing in $backupdir"
       rm -rf "{$tmpdir:?}/"
     fi
   else
+    echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
     logprint "$tmpdir is not writable, continuing in $backupdir"
   fi
 
@@ -3127,7 +3129,7 @@ doBackup(){
   #Tar the files and remove the original Backup Directory.  Saves about 50MB of disk space per backup
 
   echo -ne "${NORMAL} Compressing Backup "
-  backupfile="${backupdir}/${instance}.${datestamp}.tar.bz2"
+  backupfile="${arkbackupdir}/${daystamp}/${instance}.${datestamp}.tar.bz2"
 
   tar -jcf "${backupfile}" -C "${arkbackupdir}" "${datestamp}"
   rm -rf "${backupdir:?}/"
