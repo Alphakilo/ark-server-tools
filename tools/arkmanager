@@ -2951,14 +2951,15 @@ doBackup(){
       backupdir="${tmpdir}/${datestamp}"
       backupdirdaily="${tmpdir}/${daystamp}"
       logprint "Enough space on /tmp to work there, continuing in $backupdir"
-    else
-      echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
+    else      
       logprint "/tmp partition too small to provide a workdir, continuing in $backupdir"
+      echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
       rm -rf "{$tmpdir:?}/"
     fi
-  else
-    echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
+  else    
     logprint "$tmpdir is not writable, continuing in $backupdir"
+    echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
+    rm -rf "{$tmpdir:?}/"
   fi
 
   mkdir -p "$backupdir"
@@ -3128,10 +3129,11 @@ doBackup(){
   
   #Tar the files and remove the original Backup Directory.  Saves about 50MB of disk space per backup
 
-  echo -ne "${NORMAL} Compressing Backup "
   backupfile="${arkbackupdir}/${daystamp}/${instance}.${datestamp}.tar.bz2"
-  [ -d "${arkbackupdir}/${daystamp}" ] || mkdir -p "${arkbackupdir}/${daystamp}"
+  [ -d "${arkbackupdir}/${daystamp}" ] || mkdir "${arkbackupdir}/${daystamp}/"
 
+  echo "DEBUG: Going to run: tar -jcf ${backupfile} -C ${backupdir} ${datestamp}"
+  echo -ne "${NORMAL} Compressing Backup "
   tar -jcf "${backupfile}" -C "${backupdir}" "${datestamp}"
   rm -rf "${backupdir:?}/"
 
