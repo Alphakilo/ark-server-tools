@@ -2963,7 +2963,7 @@ doBackup(){
   mkdir -p "$backupdirdaily"
 
   # TODO: fix "\033[0;39m" output
-  echo "${NORMAL} Saved arks directory is ${savedir}"
+  echo -e "${NORMAL} Saved arks directory is ${savedir}"
 
   # ARK server uses Write-Unlink-Rename
   echo -ne "${NORMAL} Copying ARK world file (${mapname}) "
