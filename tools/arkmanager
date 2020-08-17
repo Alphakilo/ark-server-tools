@@ -2915,7 +2915,7 @@ doRemoveMods(){
 doBackup(){
   local datestamp=$(date +"%Y-%m-%d_%H.%M.%S")
   local daystamp=$(date +"%Y-%m-%d")
-  local tmpdir="/tmp/$(mktemp -qd arkbackup.XXXXXX)"
+  local tmpdir="$(mktemp -qd /tmp/arkbackup.XXXXXX)"
   local backupdir="${arkbackupdir}/${datestamp}"
   local backupdirdaily="${arkbackupdir}/${daystamp}"
   local saverootdir="${arkserverroot}/${arkserverdir}/Saved"
@@ -2923,8 +2923,6 @@ doBackup(){
   local savedir="$(getSavedArksDirectory "${saverootdir}")"
   local mapname="$(getServerMapName)"
   local backupfile
-  mkdir -p "$backupdir"
-  mkdir -p "$backupdirdaily"
 
   for arg in "$@"; do
     case "$arg" in
@@ -2944,7 +2942,7 @@ doBackup(){
   fi
 
   if [[ -d "$tmpdir" && -w "$tmpdir" ]]; then
-    logprint "Tempfolder created: $tmpdir"
+    logprint "Tempfolder created: $tmpdir/"
 
     # check if the tmp folder has enough free space    
     local tmpfree=$(($(stat -f --format="%b*%S" "$tmpdir")))
@@ -2960,6 +2958,9 @@ doBackup(){
   else
     logprint "$tmpdir is not writable, continuing in $backupdir"
   fi
+
+  [[ ! -d "$backupdir" ]] || mkdir -p "$backupdir"
+  [[ ! -d "$backupdirdaily" ]] || mkdir -p "$backupdirdaily"
 
   # TODO: fix "\033[0;39m" output
   echo "${NORMAL} Saved arks directory is ${savedir}"
