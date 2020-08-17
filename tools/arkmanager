@@ -2915,7 +2915,7 @@ doRemoveMods(){
 doBackup(){
   local datestamp=$(date +"%Y-%m-%d_%H.%M.%S")
   local daystamp=$(date +"%Y-%m-%d")
-  local tmpdir=$(mktemp -qd arkbackup.XXXXXX)
+  local tmpdir="/tmp/$(mktemp -qd arkbackup.XXXXXX)"
   local backupdir="${arkbackupdir}/${datestamp}"
   local backupdirdaily="${arkbackupdir}/${daystamp}"
   local saverootdir="${arkserverroot}/${arkserverdir}/Saved"
@@ -2943,7 +2943,7 @@ doBackup(){
     return 1
   fi
 
-  if [[ -d "$tmpdir$" && -w "$tmpdir" ]]; then
+  if [[ -d "$tmpdir" && -w "$tmpdir" ]]; then
     logprint "Tempfolder created: $tmpdir"
 
     # check if the tmp folder has enough free space    
@@ -2954,12 +2954,10 @@ doBackup(){
       backupdirdaily="${tmpdir}/${daystamp}"
       logprint "Enough space on /tmp to work there, continuing in $backupdir"
     else
-      echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
       logprint "/tmp partition too small to provide a workdir, continuing in $backupdir"
       rm -rf "{$tmpdir:?}/"
     fi
   else
-    echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
     logprint "$tmpdir is not writable, continuing in $backupdir"
   fi
 
@@ -3128,7 +3126,7 @@ doBackup(){
   #Tar the files and remove the original Backup Directory.  Saves about 50MB of disk space per backup
 
   echo -ne "${NORMAL} Compressing Backup "
-  backupfile="${arkbackupdir}/${daystamp}/${instance}.${datestamp}.tar.bz2"
+  backupfile="${backupdir}/${instance}.${datestamp}.tar.bz2"
 
   tar -jcf "${backupfile}" -C "${arkbackupdir}" "${datestamp}"
   rm -rf "${backupdir:?}/"
