@@ -2949,13 +2949,18 @@ doBackup(){
     # check if the tmp folder has enough free space    
     local tmpfree=$(($(stat -f --format="%b*%S" "$tmpdir")))
     local savedirsize=$(du -sL "$savedir" | cut -f 1)
-    if [[ "$tmpfree" -ge "$savedirsize" ]]; then      
-      logprint "Enough space on /tmp to work there"
+    if [[ "$tmpfree" -ge "$savedirsize" ]]; then
+      backupdir="${tmpdir}/${datestamp}"
+      backupdirdaily="${tmpdir}/${daystamp}"
+      logprint "Enough space on /tmp to work there, continuing in $backupdir"
     else
       echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
       logprint "/tmp partition too small to provide a workdir, continuing in $backupdir"
       rm -rf "{$tmpdir:?}/"
     fi
+  else
+    echo "${NORMAL}\e[68G[  ${YELLOW}WARN${NORMAL}  ]"
+    logprint "$tmpdir is not writable, continuing in $backupdir"
   fi
 
   # TODO: fix "\033[0;39m" output
